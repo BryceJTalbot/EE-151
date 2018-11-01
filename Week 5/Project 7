@@ -1,0 +1,68 @@
+
+//define variables
+float leftSpeed; //set left speed variable as float
+float rightSpeed;//set right speed variable as float
+int leftPwm;     //set left PWM variable
+int rightPwm;    //set right PWM variable
+
+int motorR1 = 4; //set MotorR1 variable to 4 coorisponding to pin 4
+int motorR2 = 5; //set MotorR2 variable to 5 coorisponding to pin 5
+int motorL1 = 6; //set MotorL1 variable to 6 coorisponding to pin 6
+int motorL2 = 7; //set MotorL2 variable to 7 coorisponding to pin 7
+
+void setup() {
+  pinMode(motorR1, OUTPUT); //sets motorR1's pin as output
+  pinMode(motorR2, OUTPUT); //sets motorR2's pin as output
+  pinMode(motorL1, OUTPUT); //sets motorL1's pin as output
+  pinMode(motorL2, OUTPUT); //sets motorL2's pin as output
+}
+
+void loop() {
+  //maps the analog value from joysticks (0 to 1023) to (-100 to 100)
+  rightSpeed = map(analogRead(A1), 0, 1023, -100, 100); 
+  leftSpeed = map(analogRead(A0), 0, 1023, -100, 100);
+
+  //runs move left and right
+  moveRight(rightSpeed);
+  moveLeft(leftSpeed);
+
+}
+
+void moveRight(float rightPwm) {
+  if(rightSpeed > 32){  //checks direction of joystick (32 is midpoint of joystick)
+     rightPwm = map(abs(rightSpeed), 0, 100, 0, 255); //sets PWM value by taking the abs value of right speed then mapping from (-100 to 100) to (0 to 255)
+    analogWrite(motorR1, rightPwm); //spins right motor forward at the PWM speed
+    analogWrite(motorR2, 0); 
+    }
+
+    else if(rightSpeed < 32){ //checks direction of joystick (32 is midpoint of joystick)
+    rightPwm = map(abs(rightSpeed), 0, 100, 0, 255);  //sets PWM value by taking the abs value of right speed then mapping from (-100 to 100) to (0 to 255)
+    analogWrite(motorR1, 0); 
+    analogWrite(motorR2, rightPwm); //spins right motor backward at the PWM speed
+    }
+    else {
+    analogWrite(motorR1, 0); //if the stick is in center then keep motor stationary
+    analogWrite(motorR2, 0);
+    }
+}
+
+void moveLeft(float leftPwm) {
+
+      if(leftSpeed > 0){  //checks direction of joystick
+    leftPwm = map(abs(leftSpeed), 0, 100, 0, 255);  //sets PWM value by taking the abs value of left speed then mapping from (-100 to 100) to (0 to 255)
+    analogWrite(motorL1, leftPwm); //spins left motor forward at the PWM speed
+    analogWrite(motorL2, 0); 
+    }
+
+    else if(leftSpeed < 0){
+    leftPwm = map(abs(leftSpeed), 0, 100, 0, 255);  //sets PWM value by taking the abs value of left speed then mapping from (-100 to 100) to (0 to 255)
+    analogWrite(motorL1, 0); 
+    analogWrite(motorL2, leftPwm); //spins left motor backward at the PWM speed
+    }
+    else {
+    analogWrite(motorL1, 0); //if the stick is in center then keep motor stationary
+    analogWrite(motorL2, 0);
+    }
+}
+
+   
